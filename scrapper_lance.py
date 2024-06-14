@@ -90,11 +90,12 @@ def obter_conteudo(url):
                 # Buscando dentro do artigo o título principal e extraindo o texto pelo get_text
                 conteudo["Título 2"] = article.find('h2').get_text()
 
-                # Encontrando as tags de parágrafos
-                paragrafos = article.find_all('p', class_="w-full")
 
                 # Recuperando os dados de data e local da publicação na tag <time>
                 conteudo["Data"] = article.find('time').get_text()
+
+                # Encontrando as tags de parágrafos
+                paragrafos = article.find_all('p', class_="w-full")
 
                 # Recuperando a array de parágrafos obtidos
                 paragrafos = [p for p in paragrafos if not p.find('a')]
@@ -104,7 +105,7 @@ def obter_conteudo(url):
                 for paragrafo in paragrafos:
                 
                      # Concatenando as strings inserindo a quebra de linha no final como \n
-                     conteudo["Conteúdo"] +=paragrafo.get_text() + "\n"
+                     conteudo["Conteúdo"] += paragrafo.get_text() + "\n"
     return conteudo
 
 # Obtendo links da página principal:
@@ -143,6 +144,7 @@ with open(arquivo, 'w', encoding='utf-8') as file:
 
           # Recuperando o dicionário do conteúdo de acordo com o retorno da função
           conteudo = obter_conteudo(link)
+          print(conteudo)
 
           #Eliminando conteúdos vazios e não salvando
           if conteudo == {} or conteudo == None:
