@@ -1,15 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import requests, json
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
-import sys
-import io
 
 # Configurando a saída padrão para UTF-8
 # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -78,10 +70,6 @@ def obter_links(url, n_noticias=None):
     return links
 
 
-
-# In[2]:
-
-
 # Função para extrair data e hora
 def extrair_data_hora(data_str):
     match = re.search(r'Publicada em (\d{2}/\d{2}/\d{4} - \d{2}:\d{2})', data_str)
@@ -97,9 +85,8 @@ def extrair_local(data_str):
     return None
 
 
-# In[13]:
 
-
+#Função para validar a estrutura do dicionário com as respectivas chaves presentes
 def validar_estrutura(dicionario, chaves_esperadas):
     
     if dicionario is None:
@@ -115,10 +102,7 @@ def validar_estrutura(dicionario, chaves_esperadas):
     
     return True
 
-
-# In[3]:
-
-
+#Função para obter o conteúdo
 def obter_conteudo(url):
     # Criando o dicionário vazio para coletar o conteúdo 
     conteudo = {}
@@ -175,10 +159,6 @@ def obter_conteudo(url):
     return conteudo
 
 
-
-# In[ ]:
-
-
 # Obtendo links da página principal:
 # Chamando a função par obtenção dos links com 5 links
 links = obter_links(url_principal, maximo_noticias)
@@ -204,38 +184,32 @@ for i in range(len(times)):
 links_gerais = set(links_gerais)
 
 
-# In[14]:
-
-
 # Definindo as chaves esperadas
 colunas_esperadas  = {"Título 1", "Título 2", "Data", "Local", "Conteúdo"}
-# noticias = pd.DataFrame(columns=colunas)
-# print(noticias)
+
+#Criando o array de notícias recebidas
 noticias = []
+
 for link in links_gerais:
      conteudo = obter_conteudo(link)
+     #Caso a estrutura seja válida é incorporada à lista
      if validar_estrutura(conteudo, colunas_esperadas):
           noticias.append(conteudo)
     #  print(conteudo)
     #  conteudo = pd.DataFrame(conteudo)
     #  noticias = pd.concat([noticias, conteudo], ignore_index=True)
 
+#A lista é convertida para um datraframe
 noticias = pd.DataFrame(noticias)
 
-# noticias.to_csv(arquivo,encoding="utf-8", index=False)
-
-
-# In[15]:
-
-
+#Converte-se em data
 noticias["Data"] = pd.to_datetime(noticias["Data"])
-noticias
 
 
-# In[16]:
 
-
-# Declarando o nome do arquivo a salvar os conteúdos extraídos
+# Declarando o nome do arquivo a salvar os conteúdos extraídos 
 arquivo = "noticias_lance.csv"
+
+#Salvando o arquivo
 noticias.to_csv(arquivo,encoding="utf-8", index=False)
 
